@@ -1,0 +1,8 @@
+{
+  "findings": [
+    {
+      "type": "return-added",
+      "confidence": "high"
+    }
+  ]
+}

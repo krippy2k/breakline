@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "type": "boundary-changed",
+      "confidence": "high"
+    }
+  ],
+  "witness": {
+    "retries": 3
+  }
+}

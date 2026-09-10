@@ -1,0 +1,7 @@
+{
+  "findings": [
+    {
+      "type": "call-became-unconditional"
+    }
+  ]
+}

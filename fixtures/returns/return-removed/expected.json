@@ -1,0 +1,8 @@
+{
+  "findings": [
+    {
+      "type": "return-removed",
+      "confidence": "high"
+    }
+  ]
+}

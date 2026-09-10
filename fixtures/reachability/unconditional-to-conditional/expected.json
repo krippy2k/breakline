@@ -1,0 +1,7 @@
+{
+  "findings": [
+    {
+      "type": "predicate-restricted"
+    }
+  ]
+}

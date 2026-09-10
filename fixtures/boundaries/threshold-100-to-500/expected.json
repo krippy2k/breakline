@@ -1,0 +1,8 @@
+{
+  "findings": [
+    {
+      "type": "boundary-changed",
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "findings": [
+    {
+      "type": "predicate-expanded",
+      "confidence": "high"
+    }
+  ],
+  "witnessVariables": ["active", "admin"]
+}

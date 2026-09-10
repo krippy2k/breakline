@@ -1,0 +1,8 @@
+{
+  "findings": [
+    {
+      "type": "throw-removed",
+      "confidence": "high"
+    }
+  ]
+}
