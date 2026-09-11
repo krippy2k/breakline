@@ -14,9 +14,13 @@ export function scriptKind(fileName: string): ts.ScriptKind {
   return ts.ScriptKind.TS;
 }
 
+export function normalizePath(fileName: string): string {
+  return fileName.replace(/\\/g, "/");
+}
+
 export function parseSource(fileName: string, sourceText: string): ts.SourceFile {
   return ts.createSourceFile(
-    fileName,
+    normalizePath(fileName),
     sourceText,
     ts.ScriptTarget.Latest,
     true,
@@ -38,5 +42,9 @@ export function typeText(sourceFile: ts.SourceFile, node: ts.TypeNode | undefine
   if (!node) {
     return undefined;
   }
-  return node.getText(sourceFile);
+  return collapseWs(node.getText(sourceFile));
+}
+
+export function collapseWs(text: string): string {
+  return text.trim().replace(/\s+/g, " ");
 }

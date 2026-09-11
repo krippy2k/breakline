@@ -1,0 +1,12 @@
+{
+  "changes": [
+    { "kind": "condition_changed", "symbol": "processOrder" },
+    { "kind": "return_changed", "symbol": "processOrder" },
+    { "kind": "call_added", "symbol": "processOrder" }
+  ],
+  "findings": [
+    { "kind": "condition_changed", "symbol": "processOrder" },
+    { "kind": "return_changed", "symbol": "processOrder" },
+    { "kind": "call_added", "symbol": "processOrder" }
+  ]
+}

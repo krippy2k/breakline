@@ -19,7 +19,7 @@ function cases(): { name: string; dir: string }[] {
   const result: { name: string; dir: string }[] = [];
   for (const category of readdirSync(fixturesRoot)) {
     const categoryDir = join(fixturesRoot, category);
-    if (!statSync(categoryDir).isDirectory()) {
+    if (!statSync(categoryDir).isDirectory() || category === "v0.2" || category === "impact") {
       continue;
     }
     for (const name of readdirSync(categoryDir)) {

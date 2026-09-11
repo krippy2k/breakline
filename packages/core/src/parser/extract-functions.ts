@@ -1,15 +1,18 @@
 import ts from "typescript";
 import type {
   BehaviorParameter,
+  FunctionSignature,
   InspectedFunction,
+  SignatureParameter,
   SourceLocation,
   SymbolIdentity,
 } from "../types.js";
-import { getLocation, parseSource, typeText } from "./parse.js";
+import { collapseWs, getLocation, parseSource, typeText } from "./parse.js";
 
 export interface ExtractedFunction {
   identity: SymbolIdentity;
   parameters: BehaviorParameter[];
+  signature: FunctionSignature;
   location: SourceLocation;
   node: ts.FunctionLikeDeclaration;
   sourceFile: ts.SourceFile;
@@ -89,18 +92,36 @@ function toExtracted(
     name,
     kind,
   };
+  const signature = signatureOf(sourceFile, node);
   return {
     identity,
-    parameters: parametersOf(sourceFile, node),
+    parameters: signature.parameters.map((param) => ({
+      name: param.name,
+      type: param.type,
+      optional: param.optional,
+      defaultValue: param.defaultValue,
+    })),
+    signature,
     location: getLocation(sourceFile, node),
     node,
     sourceFile,
   };
 }
 
-function parametersOf(sourceFile: ts.SourceFile, node: ts.FunctionLikeDeclaration): BehaviorParameter[] {
-  return node.parameters.map((param) => ({
+export function signatureOf(sourceFile: ts.SourceFile, node: ts.FunctionLikeDeclaration): FunctionSignature {
+  return {
+    async: (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Async) !== 0,
+    returnType: typeText(sourceFile, node.type)?.trim(),
+    parameters: node.parameters.map((param) => parameterOf(sourceFile, param)),
+  };
+}
+
+function parameterOf(sourceFile: ts.SourceFile, param: ts.ParameterDeclaration): SignatureParameter {
+  return {
     name: param.name.getText(sourceFile),
-    type: typeText(sourceFile, param.type),
-  }));
+    type: typeText(sourceFile, param.type)?.trim(),
+    optional: Boolean(param.questionToken || param.initializer),
+    rest: Boolean(param.dotDotDotToken),
+    defaultValue: param.initializer ? collapseWs(param.initializer.getText(sourceFile)) : undefined,
+  };
 }

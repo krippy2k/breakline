@@ -32,6 +32,7 @@ export function buildBehaviorFunction(extracted: ExtractedFunction): BehaviorFun
     file: extracted.identity.file,
     identity: extracted.identity,
     parameters: extracted.parameters,
+    signature: extracted.signature,
     paths,
     branchPredicates: body ? collectBranchPredicates(extracted.sourceFile, body) : [],
     location: extracted.location,
@@ -46,6 +47,12 @@ function collectBranchPredicates(
   const visit = (node: ts.Node): void => {
     if (ts.isIfStatement(node)) {
       predicates.push(normalizeExpression(sourceFile, node.expression));
+    } else if (ts.isWhileStatement(node) || ts.isDoStatement(node)) {
+      predicates.push(normalizeExpression(sourceFile, node.expression));
+    } else if (ts.isForStatement(node) && node.condition) {
+      predicates.push(normalizeExpression(sourceFile, node.condition));
+    } else if (ts.isConditionalExpression(node)) {
+      predicates.push(normalizeExpression(sourceFile, node.condition));
     }
     ts.forEachChild(node, visit);
   };

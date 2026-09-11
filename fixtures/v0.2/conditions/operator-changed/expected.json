@@ -1,0 +1,4 @@
+{
+  "changes": [{ "kind": "condition_changed", "symbol": "eligible" }],
+  "findings": [{ "kind": "condition_changed", "symbol": "eligible" }]
+}

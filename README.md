@@ -4,7 +4,7 @@
 
 Traditional diffs answer *what code changed*. Breakline answers *what behavior changed because of the code change* — and, when it can, proves it with a concrete witness.
 
-v0.1 targets TypeScript and JavaScript through a local CLI. Analysis is deterministic static analysis. No API key, network, or LLM is required.
+v0.3 targets TypeScript and JavaScript through a local CLI. Analysis is deterministic static analysis. No API key, network, or LLM is required.
 
 ## Install
 
@@ -34,6 +34,9 @@ Compare two versions of the same function(s):
 
 ```bash
 pnpm breakline compare before.ts after.ts
+pnpm breakline compare before.ts after.ts --impact
+pnpm breakline compare before.ts after.ts --format json
+pnpm breakline compare before.ts after.ts --output findings.json
 ```
 
 Analyze a git range:
@@ -42,27 +45,142 @@ Analyze a git range:
 pnpm breakline analyze main..HEAD
 pnpm breakline analyze HEAD~1 HEAD
 pnpm breakline analyze --base main --head HEAD
+pnpm breakline analyze main..HEAD --format json --output findings.json
+pnpm breakline analyze main..HEAD --no-impact
+pnpm breakline analyze main..HEAD --impact-depth 4 --show-impact-paths --verbose
 ```
 
-Low-confidence findings are hidden unless you pass `--include-low-confidence`.
+`--format` is `text` (default) or `json`. JSON uses schema version `0.3`. `analyze` includes impact analysis by default.
 
-## Compelling demo
+Low-confidence v0.1 findings are hidden unless you pass `--include-low-confidence`.
 
-Given `isAdmin && isOwner` becoming `isAdmin || isOwner`, Breakline reports a high-confidence **predicate expanded** finding and a witness such as `isAdmin = true`, `isOwner = false`.
+## v0.3 impact example
+
+A pricing change is not just a local return tweak. If `calculatePrice()` is used by checkout, Breakline reports the blast radius:
+
+```bash
+# from fixtures/impact/demo, after a git commit that changes src/pricing.ts
+breakline analyze HEAD~1 HEAD --show-impact-paths
+```
+
+```text
+HIGH IMPACT
+────────────────────────────────────────
+
+calculatePrice()
+
+Direct dependents:
+  createOrder()
+
+Indirect dependents:
+  checkout()
+
+Entry points:
+  POST /checkout
+
+Related tests:
+  ✓ calculates price
+
+Confidence:
+  0.95 (strong)
+```
+
+See `fixtures/impact/demo/` for the sample checkout graph.
+
+## v0.2 example
+
+Given this change to `processOrder`:
+
+```ts
+// before
+export function processOrder(status: string) {
+  if (status === "pending") {
+    save(status);
+    return true;
+  }
+  return false;
+}
+
+// after
+export function processOrder(status: string) {
+  if (status !== "shipped") {
+    save(status);
+    auditOrder(status);
+    return false;
+  }
+  return false;
+}
+```
+
+```bash
+breakline compare fixtures/v0.2/mixed/multiple-findings/before.ts fixtures/v0.2/mixed/multiple-findings/after.ts
+```
+
+Breakline reports the condition change, the new `auditOrder` call, and the changed return — without claiming the condition was widened or narrowed.
+
+```text
+BREAKLINE  .../after.ts
+
+processOrder()
+  BEHAVIOR CHANGED
+
+  • Condition changed
+      before: status === "pending"
+      after:  status !== "shipped"
+
+  • Return behavior changed
+      before: true
+      after:  false
+
+  • New call
+      after:  auditOrder(status)
+```
+
+Machine-readable output is the same Finding model:
+
+```bash
+breakline compare before.ts after.ts --format json
+```
+
+```json
+{
+  "schemaVersion": "0.2",
+  "files": [
+    {
+      "path": "after.ts",
+      "findings": []
+    }
+  ]
+}
+```
+
+## Compelling demo (v0.1 witnesses)
+
+Given `isAdmin && isOwner` becoming `isAdmin || isOwner`, Breakline still proves a **predicate expanded** difference with a witness such as `isAdmin = true`, `isOwner = false`.
 
 ```bash
 breakline compare fixtures/conditions/can-delete/before.ts fixtures/conditions/can-delete/after.ts
 ```
 
-## What v0.1 detects
+## What v0.3 detects
 
-- Conditional / predicate changes (expanded, restricted, inverted)
-- Numeric boundary changes, with boundary witnesses
-- Return behavior changes
-- Throw added or removed; catch paths that no longer terminate
-- Call reachability (newly reachable, no longer reachable, became unconditional)
+- Direct and indirect dependents of a changed symbol
+- HTTP route / event / CLI entry points that can reach it
+- Related tests and potential test gaps
+- Heuristic impact level and confidence
 
-See [spec/spec.md](spec/spec.md) for the full product definition.
+## What v0.2 detects
+
+- Function added or removed
+- Signature changes (parameters, defaults, optional/required, explicit return type, async)
+- Conditional changes in `if`, loops, and ternaries
+- Return expression and return-path changes
+- Calls added, removed, or with different arguments
+- Throw added or removed
+
+v0.1 still detects predicate expansion/restriction, numeric boundaries, and call reachability, and attaches a witness when one can be proven.
+
+See [spec/spec.md](spec/spec.md), [spec/v0.2.md](spec/v0.2.md), and [spec/v0.3.md](spec/v0.3.md) for the full product definition.
 
 ## Develop
 
@@ -70,4 +188,4 @@ See [spec/spec.md](spec/spec.md) for the full product definition.
 pnpm test
 ```
 
-Fixture cases live under `fixtures/` as `before.ts`, `after.ts`, and `expected.json`.
+Fixture cases live under `fixtures/` as `before.ts`, `after.ts`, and `expected.json`. v0.2 classifier fixtures are under `fixtures/v0.2/`. Impact fixtures are under `fixtures/impact/`.

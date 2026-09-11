@@ -1,0 +1,4 @@
+{
+  "changes": [{ "kind": "call_added", "symbol": "processOrder" }],
+  "findings": [{ "kind": "call_added", "symbol": "processOrder" }]
+}

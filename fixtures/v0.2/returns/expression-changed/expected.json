@@ -1,0 +1,4 @@
+{
+  "changes": [{ "kind": "return_changed", "symbol": "ready" }],
+  "findings": [{ "kind": "return_changed", "symbol": "ready" }]
+}

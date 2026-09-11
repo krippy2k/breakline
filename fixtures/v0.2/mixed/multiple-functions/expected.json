@@ -1,0 +1,10 @@
+{
+  "changes": [
+    { "kind": "return_changed", "symbol": "scale" },
+    { "kind": "condition_changed", "symbol": "allowed" }
+  ],
+  "findings": [
+    { "kind": "return_changed", "symbol": "scale" },
+    { "kind": "condition_changed", "symbol": "allowed" }
+  ]
+}

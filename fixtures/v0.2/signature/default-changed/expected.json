@@ -1,0 +1,4 @@
+{
+  "changes": [{ "kind": "signature_changed", "symbol": "greet" }],
+  "findings": [{ "kind": "signature_changed", "symbol": "greet" }]
+}

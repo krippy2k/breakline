@@ -31,7 +31,7 @@ export function parseRange(
 export async function listChangedFiles(base: string, head: string, cwd: string): Promise<string[]> {
   const { stdout } = await execFileAsync(
     "git",
-    ["diff", "--name-only", "--diff-filter=ACMR", `${base}...${head}`],
+    ["diff", "--name-only", "--diff-filter=ACMRD", `${base}...${head}`],
     { cwd },
   );
   return stdout

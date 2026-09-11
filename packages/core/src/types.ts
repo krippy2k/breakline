@@ -19,6 +19,22 @@ export interface SymbolIdentity {
 export interface BehaviorParameter {
   name: string;
   type?: string;
+  optional?: boolean;
+  defaultValue?: string;
+}
+
+export interface SignatureParameter {
+  name: string;
+  type?: string;
+  optional: boolean;
+  rest: boolean;
+  defaultValue?: string;
+}
+
+export interface FunctionSignature {
+  async: boolean;
+  returnType?: string;
+  parameters: SignatureParameter[];
 }
 
 export type BehaviorValue =
@@ -94,6 +110,7 @@ export interface BehaviorFunction {
   file: string;
   identity: SymbolIdentity;
   parameters: BehaviorParameter[];
+  signature: FunctionSignature;
   paths: BehaviorPath[];
   branchPredicates: BehaviorExpression[];
   location?: SourceLocation;
@@ -168,4 +185,8 @@ export interface AnalysisResult {
   filesAnalyzed: number;
   functionsCompared: number;
   findings: BehaviorFinding[];
+  changes?: import("./classify/types.js").Change[];
+  report?: import("./findings/types.js").Finding[];
+  files?: string[];
+  impact?: import("./impact/types.js").ImpactReport;
 }

@@ -1,0 +1,4 @@
+{
+  "changes": [{ "kind": "throw_removed", "symbol": "fail" }],
+  "findings": [{ "kind": "throw_removed", "symbol": "fail" }]
+}

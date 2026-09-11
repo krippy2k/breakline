@@ -1,0 +1,4 @@
+{
+  "changes": [{ "kind": "condition_changed", "symbol": "canCancel" }],
+  "findings": [{ "kind": "condition_changed", "symbol": "canCancel" }]
+}
