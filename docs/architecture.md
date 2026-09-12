@@ -30,7 +30,20 @@ Structured findings → CLI reporter
 ## Packages
 
 - `@breakline/core` — parser, BIR, analyzers, witnesses, findings
+- `@breakline/report` — structured report contract, impact classification, config, `analyze()`
 - `@breakline/cli` — `inspect`, `compare`, `analyze`, and the human-readable report
+- `@breakline/github` — GitHub App auth, webhooks, checkout, Check Runs, and PR comments
+- `@breakline/server` — hosted webhook receiver and report pages
+
+Dependency direction:
+
+```text
+GitHub → Report → Core
+CLI    → Core
+Server → GitHub → Report → Core
+```
+
+Core never depends on GitHub.
 
 Language-specific AST types stop at the BIR boundary. Comparators only see `BehaviorFunction` values.
 

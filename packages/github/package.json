@@ -1,7 +1,7 @@
 {
-  "name": "@breakline/core",
+  "name": "@breakline/github",
   "version": "0.4.0",
-  "description": "Breakline analysis engine: parse TypeScript/JavaScript, compare behavior, and emit findings",
+  "description": "GitHub App adapter for Breakline: webhooks, Check Runs, and pull request analysis",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,7 +20,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/krippy2k/breakline.git",
-    "directory": "packages/core"
+    "directory": "packages/github"
   },
   "bugs": {
     "url": "https://github.com/krippy2k/breakline/issues"
@@ -28,11 +28,9 @@
   "homepage": "https://github.com/krippy2k/breakline#readme",
   "keywords": [
     "breakline",
-    "static-analysis",
-    "typescript",
-    "javascript",
-    "code-review",
-    "diff"
+    "github-app",
+    "pull-request",
+    "static-analysis"
   ],
   "publishConfig": {
     "access": "public"
@@ -44,10 +42,12 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "typescript": "^5.9.2"
+    "@breakline/report": "workspace:^"
   },
   "devDependencies": {
+    "@breakline/core": "workspace:^",
     "@types/node": "^24.3.1",
+    "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }
 }

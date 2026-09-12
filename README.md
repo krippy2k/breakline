@@ -4,20 +4,29 @@
 
 Traditional diffs answer *what code changed*. Breakline answers *what behavior changed because of the code change* — and, when it can, proves it with a concrete witness.
 
-v0.3 targets TypeScript and JavaScript through a local CLI. Analysis is deterministic static analysis. No API key, network, or LLM is required.
+v0.4 adds a GitHub App that analyzes pull requests and publishes Breakline reports as GitHub Checks. The local CLI still targets TypeScript and JavaScript. Analysis is deterministic static analysis. No API key, network, or LLM is required for CLI use.
 
 ## Install
 
 ```bash
-pnpm install
-pnpm build
+npm install -g @breakline/cli
+breakline analyze main..HEAD
 ```
 
-The CLI is `@breakline/cli` (`breakline`). After `pnpm build`, run it from the repo (including subdirectories):
+Without a global install:
 
 ```bash
+npx @breakline/cli analyze main..HEAD
+```
+
+The published command is `breakline`. The npm package is `@breakline/cli` because the unscoped name is already taken. See [docs/npm.md](docs/npm.md) to publish the workspace packages.
+
+### From this repository
+
+```bash
+pnpm install
+pnpm build
 pnpm breakline inspect example.ts
-pnpm exec breakline inspect example.ts
 ```
 
 File arguments are resolved from the directory you invoked the command in.
@@ -180,11 +189,23 @@ breakline compare fixtures/conditions/can-delete/before.ts fixtures/conditions/c
 
 v0.1 still detects predicate expansion/restriction, numeric boundaries, and call reachability, and attaches a witness when one can be proven.
 
-See [spec/spec.md](spec/spec.md), [spec/v0.2.md](spec/v0.2.md), and [spec/v0.3.md](spec/v0.3.md) for the full product definition.
+See [spec/spec.md](spec/spec.md), [spec/v0.2.md](spec/v0.2.md), [spec/v0.3.md](spec/v0.3.md), and [spec/v0.4.md](spec/v0.4.md) for the full product definition.
+
+## GitHub App (v0.4)
+
+Install the Breakline GitHub App on a repository. Opening or updating a pull request creates a `Breakline` check with behavioral impact, key findings, and a link to the hosted report.
+
+```bash
+pnpm dev:github
+```
+
+See [docs/github-app-install.md](docs/github-app-install.md) for the step-by-step install and configuration guide.
 
 ## Develop
 
 ```bash
+pnpm install
+pnpm build
 pnpm test
 ```
 

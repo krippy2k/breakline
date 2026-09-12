@@ -6,3 +6,6 @@ coverage/
 *.log
 .idea/
 .vscode/
+.env
+data/
+*.pem

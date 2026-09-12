@@ -1,7 +1,7 @@
 
 {
   "name": "breakline",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.15.1",
@@ -14,7 +14,9 @@
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "breakline": "node packages/cli/dist/index.js"
+    "breakline": "node packages/cli/dist/index.js",
+    "dev:github": "pnpm --filter @breakline/server dev",
+    "publish:packages": "pnpm -r --filter \"./packages/**\" publish --access public"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["esbuild"]

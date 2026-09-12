@@ -17,7 +17,7 @@ import { formatInspect } from "./reporter.js";
 
 const program = new Command();
 
-program.name("breakline").description("Semantic behavioral change analysis for code").version("0.3.0");
+program.name("breakline").description("Semantic behavioral change analysis for code").version("0.4.0");
 
 program
   .command("inspect")
